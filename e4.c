@@ -1,7 +1,6 @@
 /*
  * Name: Camila Blanco
- * CWID: A20541085
- * Email-ID: camblan@okstate.edu
+ * Title: Student Grade Calculator
  */
 
 #include <stdio.h>
