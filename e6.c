@@ -1,0 +1,265 @@
+/* Name: Camila Blanco
+ * CWID: A20541085
+ * Email-ID: camblan@okstate.edu
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int element;
+    struct Node *next;
+};
+
+void printList(struct Node *head) {
+    struct Node *current = head;
+
+    printf("Linked List: ");
+
+    while (current != NULL) {
+        printf("%d -> ", current->element);
+        current = current->next;
+    }
+
+    printf("NULL\n");
+}
+
+struct Node *insertBeginning(struct Node *head, int value) {
+    struct Node *newNode = malloc(sizeof(struct Node));
+
+    newNode->element = value;
+    newNode->next = head;
+
+    return newNode;
+}
+
+struct Node *insertEnd(struct Node *head, int value) {
+    struct Node *newNode = malloc(sizeof(struct Node));
+
+    newNode->element = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        return newNode;
+    }
+
+    struct Node *current = head;
+
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    current->next = newNode;
+
+    return head;
+}
+
+struct Node *insertPosition(struct Node *head, int value, int position) {
+    struct Node *newNode = malloc(sizeof(struct Node));
+
+    newNode->element = value;
+
+    if (position == 1) {
+        newNode->next = head;
+        return newNode;
+    }
+
+    struct Node *current = head;
+
+    for (int i = 1; i < position - 1 && current != NULL; i++) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Invalid position.\n");
+        free(newNode);
+        return head;
+    }
+
+    newNode->next = current->next;
+    current->next = newNode;
+
+    return head;
+}
+
+struct Node *deleteFirst(struct Node *head) {
+    if (head == NULL) {
+        printf("The linked list is empty.\n");
+        return head;
+    }
+
+    struct Node *temp = head;
+    head = head->next;
+
+    free(temp);
+
+    return head;
+}
+
+struct Node *deleteLast(struct Node *head) {
+    if (head == NULL) {
+        printf("The linked list is empty.\n");
+        return head;
+    }
+
+    if (head->next == NULL) {
+        free(head);
+        return NULL;
+    }
+
+    struct Node *current = head;
+
+    while (current->next->next != NULL) {
+        current = current->next;
+    }
+
+    free(current->next);
+    current->next = NULL;
+
+    return head;
+}
+
+struct Node *deletePosition(struct Node *head, int position) {
+    if (head == NULL) {
+        printf("The linked list is empty.\n");
+        return head;
+    }
+
+    if (position == 1) {
+        return deleteFirst(head);
+    }
+
+    struct Node *current = head;
+
+    for (int i = 1; i < position - 1 && current->next != NULL; i++) {
+        current = current->next;
+    }
+
+    if (current->next == NULL) {
+        printf("Invalid position.\n");
+        return head;
+    }
+
+    struct Node *temp = current->next;
+    current->next = temp->next;
+
+    free(temp);
+
+    return head;
+}
+
+int main() {
+
+    int numElements;
+    int element = 0;
+    struct Node *head = NULL;
+
+    printf("\nEnter the number of elements in the linked list: ");
+    scanf("%d", &numElements);
+
+    while (element < numElements) {
+        int elementValue;
+        element += 1;
+
+        printf("\nEnter element %d: ", element);
+        scanf("%d", &elementValue);
+
+        head = insertEnd(head, elementValue);
+    }
+
+    printf("\nElements at the Beginning: ");
+    printList(head);
+
+    int choice;
+
+    do {
+        printf("\nEnter any choice from the Menu:\n");
+        printf("\n***************Menu***************\n");
+        printf("1. Insert at the beginning\n");
+        printf("2. Insert at the end\n");
+        printf("3. Insert at a specific position\n");
+        printf("4. Delete the first node\n");
+        printf("5. Delete the last node\n");
+        printf("6. Delete a node at a specific position\n");
+        printf("7. Exit\n");
+        printf("************************************\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+            case 1: {
+                int value;
+
+                printf("Enter the element to insert at the beginning: ");
+                scanf("%d", &value);
+
+                head = insertBeginning(head, value);
+                printList(head);
+
+                break;
+            }
+
+            case 2: {
+                int value;
+
+                printf("Enter the element to insert at the end: ");
+                scanf("%d", &value);
+
+                head = insertEnd(head, value);
+                printList(head);
+
+                break;
+            }
+
+            case 3: {
+                int value;
+                int position;
+
+                printf("Enter the element to insert: ");
+                scanf("%d", &value);
+
+                printf("Enter the position to insert at: ");
+                scanf("%d", &position);
+
+                head = insertPosition(head, value, position);
+                printList(head);
+
+                break;
+            }
+
+            case 4:
+                head = deleteFirst(head);
+                printList(head);
+                break;
+
+            case 5:
+                head = deleteLast(head);
+                printList(head);
+                break;
+
+            case 6: {
+                int position;
+
+                printf("Enter the position of the node to delete: ");
+                scanf("%d", &position);
+
+                head = deletePosition(head, position);
+                printList(head);
+
+                break;
+            }
+
+            case 7:
+                printf("Exiting the program...\n");
+                break;
+
+            default:
+                printf("Invalid choice.\n");
+        }
+
+    } while (choice != 7);
+
+    return 0;
+}
